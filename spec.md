@@ -14,9 +14,9 @@
 
 - Lát cắt (chép từ track): Trong **trợ lý học bài của trang khoá học** (kiểu ChatGPT Study mode), khi **học viên** đang hỏi bài lúc tối muộn, khi không còn ai để hỏi, **AI giảng kèm trích tài liệu, hỏi lại cho rõ, gợi ý từng bước, hay nói thẳng "tài liệu không có, hỏi giảng viên"**, để học viên hiểu đúng bài mình đang học, không chép đáp án, không học sai mà không biết.
 - 3 việc tính năng KHÔNG làm, mỗi việc một câu vì sao:
-  1. _____ — vì sao: _____
-  2. _____ — vì sao: _____
-  3. _____ — vì sao: _____
+  1. Không giải hộ hoặc xác nhận đáp số bài tập đang mở (Bài tập 3, hạn 13/11/2026) — vì sao: mục tiêu của lát cắt là "không chép đáp án"; đưa đáp số khiến học viên học sai mà không biết, đúng kiểu lỗi "rẻ nhưng âm thầm" mà track mô tả, và bị cấm thẳng ở rubric riêng mục 3 và mục An toàn & đạo đức.
+  2. Không giảng nội dung các buổi chưa học (buổi 4–10) — vì sao: `tra_cuu_tai_lieu` chỉ có tài liệu buổi 1–3; buổi 4–10 chỉ có tên đề cương, chưa có nội dung, nên giảng trước là AI phải bịa (lớp rủi ro ① nguồn sự thật). Rubric riêng mục 2 chỉ cho phép "nói buổi nào sẽ học, giới thiệu tối đa một câu".
+  3. Không tự khẳng định tài liệu đúng hoặc tự sửa nội dung tài liệu khi nghi ngờ sai — vì sao: không có tool nào cho AI quyền chỉnh sửa tài liệu khoá học, việc này thuộc thẩm quyền giảng viên (lớp rủi ro ③ ngoài thẩm quyền); rubric riêng mục 6 yêu cầu chỉ nói "cần xem lại, báo giảng viên", không tự xác nhận đúng/sai.
 
 ## §2. Kịch bản rủi ro (chặng 2)
 
