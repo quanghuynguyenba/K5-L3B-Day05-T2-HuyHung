@@ -1,158 +1,241 @@
 <!doctype html>
-<html lang="vi">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prototype — Trợ lý học bài · T2 Giáo dục</title>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prototype · T2 Giáo dục · trợ lý học bài tối muộn</title>
 <style>
-  :root{
-    --bg:#f4f5f7; --panel:#fff; --ink:#1a1d21; --sub:#5b6168; --line:#e3e5e8;
-    --accent:#2563eb; --ok:#16a34a; --warn:#b45309; --warn-bg:#fff7ed; --warn-line:#fed7aa;
-    --ok-bg:#f0fdf4; --ok-line:#bbf7d0; --pending-bg:#fefce8; --pending-line:#fde68a; --pending-ink:#92400e;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:16px}
-  .wrap{max-width:900px;margin:0 auto}
-  .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-  .tab{padding:8px 16px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:14px;font-weight:600;color:var(--sub)}
-  .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-  .screen{display:none}
-  .screen.active{display:block}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
-  h1{font-size:18px;margin:0 0 4px}
-  .meta{color:var(--sub);font-size:13px;margin-bottom:16px}
-  .msg{display:flex;gap:10px;margin-bottom:18px;position:relative}
-  .msg.student{justify-content:flex-end}
-  .bubble{max-width:72%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.5}
-  .student .bubble{background:var(--accent);color:#fff;border-bottom-right-radius:3px}
-  .ai .bubble{background:#f1f3f5;border:1px solid var(--line);border-bottom-left-radius:3px}
-  .ai{align-items:flex-start}
-  .avatar{width:28px;height:28px;border-radius:50%;background:#dbeafe;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-  .ai-block{max-width:78%}
-  .badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;margin:2px 4px 6px 0}
-  .badge.ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line)}
-  .badge.warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-line)}
-  .badge.pending{background:var(--pending-bg);color:var(--pending-ink);border:1px solid var(--pending-line)}
-  .citation{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:6px;padding:2px 8px;margin:4px 4px 0 0}
-  .status-card{margin-top:8px;padding:10px 12px;border-radius:8px;background:var(--pending-bg);border:1px solid var(--pending-line);font-size:12.5px;color:var(--pending-ink)}
-  .note{font-size:12px;color:var(--sub);margin-top:6px;font-style:italic}
-  .btn-row{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-  .btn{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-  .callout{position:absolute;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;top:-6px}
-  .callout.c1{right:-8px}
-  .legend{margin-top:20px;font-size:13px;line-height:1.8}
-  .legend b{color:#ef4444}
-  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{color:var(--sub);font-weight:600;font-size:12px}
-  .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px}
-  .tag.high{background:#fee2e2;color:#b91c1c}
-  .tag.normal{background:#e5e7eb;color:#374151}
-  .footer-note{font-size:12px;color:var(--sub);margin-top:16px;padding:10px;border-left:3px solid var(--line)}
-</style>
-</head>
+:root{--ink:#1d2321;--mut:#6b6f6c;--line:#dcd8cf;--bg:#f6f4ef;--card:#fff;--g:#2e6a4f;--gb:#e5f1ea;--a:#8a6516;--ab:#fbefd3;--r:#a33b2b;--rb:#f8e3df;--b:#28507a;--bb:#e3ecf6}
+*{box-sizing:border-box}body{margin:0;font-family:"Be Vietnam Pro","Noto Sans","Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+header{padding:18px 28px 10px;border-bottom:1px solid var(--line);background:#fff}
+h1{font-size:20px;margin:0 0 4px}.sub{color:var(--mut);font-size:13.5px}
+.toggle{display:flex;gap:8px;margin:12px 0 4px;flex-wrap:wrap;align-items:center}
+.toggle span{font-size:13.5px;color:var(--mut);margin-right:4px}
+.toggle button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.toggle button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+main{display:grid;grid-template-columns:400px 1fr;gap:24px;padding:20px 28px 28px;max-width:1280px}
+.phone{background:#fff;border:1px solid var(--line);border-radius:28px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.bar{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);padding:0 6px 8px;border-bottom:1px solid var(--line)}
+.course{margin:10px 4px;padding:10px 12px;border-radius:12px;background:var(--bb);font-size:13.5px}
+.course b{color:var(--b)}
+.chat{display:flex;flex-direction:column;gap:10px;padding:6px 4px;min-height:420px}
+.me{align-self:flex-end;background:var(--b);color:#fff;padding:9px 12px;border-radius:14px 14px 2px 14px;max-width:85%}
+.ai{align-self:flex-start;background:#f1efe9;padding:10px 12px;border-radius:14px 14px 14px 2px;max-width:94%}
+.ai .who{font-size:12px;color:var(--mut);margin-bottom:3px}
+.conf{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin:6px 0 2px;background:var(--ab);color:var(--a);font-weight:600}
+.src-ok{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin:4px 0;background:var(--gb);color:var(--g);font-weight:600}
+.src-no{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin:4px 0;background:var(--rb);color:var(--r);font-weight:600}
+.ev{font-size:12.5px;color:var(--mut);border-left:3px solid var(--line);padding-left:8px;margin-top:6px}
+.box{border-radius:12px;padding:10px 12px;margin-top:8px;font-size:14px}
+.box.hold{background:var(--gb);border:1px solid #bcd9c8}.box.warn{background:var(--ab);border:1px solid #ecd59e}.box.done{background:var(--bb);border:1px solid #bcd0e6}.box.red{background:var(--rb);border:1px solid #e9bdb4}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.btn{border:0;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;background:#e8e5de}
+.btn.pri{background:var(--g);color:#fff}.btn.out{background:#fff;border:1.5px solid var(--ink)}.btn.danger{background:var(--r);color:#fff}
+.n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#c2410c;color:#fff;font-size:11.5px;font-weight:700;margin-right:4px;vertical-align:1px;flex:none}
+.hide-n .n{display:none}
+aside{display:flex;flex-direction:column;gap:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.panel h2{font-size:16px;margin:0 0 8px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--mut);font-weight:600}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.p-auto{background:var(--gb);color:var(--g)}.p-ask{background:var(--ab);color:var(--a)}.p-no{background:var(--rb);color:var(--r)}.p-sug{background:#eceae4;color:#555}
+.changed td{background:#fffaf0}
+.ann li{margin-bottom:5px}.ann{padding-left:0;list-style:none;margin:0}
+.promise{font-size:15px;border-left:4px solid var(--ink);padding:6px 10px;background:#faf9f5}
+.part{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.foot{font-size:12px;color:var(--mut);padding:0 28px 20px}
+.ta-panel{font-size:13.5px}
+.ta-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.ta-row:last-child{border-bottom:0}
+.badge{font-size:11.5px;padding:1px 7px;border-radius:999px;font-weight:600}
+.badge.hi{background:var(--rb);color:var(--r)}.badge.lo{background:var(--bb);color:var(--b)}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+</style></head>
 <body>
-<div class="wrap">
-
-  <div class="tabs">
-    <button class="tab active" data-screen="s1">① Màn hình học viên</button>
-    <button class="tab" data-screen="s2">② Màn hình giảng viên/TA — hàng chờ</button>
-  </div>
-
-  <!-- SCREEN 1: student chat -->
-  <div class="screen active" id="s1">
-    <div class="card">
-      <h1>Trợ lý học bài — Nhập môn phân tích dữ liệu</h1>
-      <div class="meta">Buổi 3 · Thống kê mô tả &nbsp;·&nbsp; Bài tập 3 đang mở, hạn 13/11/2026 23:59</div>
-
-      <div class="msg student">
-        <div class="bubble">Tài liệu ghi "độ lệch chuẩn luôn nhỏ hơn phương sai" nhưng em thấy ví dụ trong lớp lại không đúng vậy, tài liệu sai hay em sai ạ?</div>
-      </div>
-      <div class="msg ai" style="position:relative">
-        <div class="avatar">AI</div>
-        <div class="ai-block">
-          <div>
-            <span class="badge pending">⏳ chưa xác nhận</span>
-            <span class="citation">📄 §3.3 Phương sai và độ lệch chuẩn</span>
-          </div>
-          <div class="bubble">Mình không đủ thẩm quyền để khẳng định tài liệu đúng hay sai. Về mặt toán: câu "độ lệch chuẩn luôn nhỏ hơn phương sai" chỉ đúng khi phương sai lớn hơn 1; nếu phương sai nhỏ hơn 1, căn bậc hai của nó lại lớn hơn chính nó. Mình đã gửi câu hỏi này cho giảng viên kiểm tra lại mục §3.3, bạn sẽ được báo khi có xác nhận chính thức.</div>
-          <div class="status-card">Đang chờ giảng viên xác nhận mục §3.3 — gửi lúc 22:14</div>
-          <div class="note">Vì sao mình không tự trả lời: đây là nội dung tài liệu khoá học, không thuộc thẩm quyền của trợ lý.</div>
-          <div class="callout c1">①</div>
-        </div>
-      </div>
-
-      <div class="msg student">
-        <div class="bubble">Hạn nộp bài 3 là khi nào ạ? Với cả tính độ lệch chuẩn bằng Excel thì dùng hàm gì?</div>
-      </div>
-      <div class="msg ai" style="position:relative">
-        <div class="avatar">AI</div>
-        <div class="ai-block">
-          <div>
-            <span class="badge ok">✓ từ trang khoá học</span>
-            <span class="badge warn">⚠ không có trong tài liệu</span>
-          </div>
-          <div class="bubble">Bài tập 3 hạn nộp <b>23:59 ngày 13/11/2026</b>, hiện đang mở (khác Bài tập 2 đã hết hạn 06/11, đã có đáp án). Về hàm tính độ lệch chuẩn: tài liệu buổi 3 chỉ dạy công thức, không ghi rõ dùng hàm nào — mình không có thông tin đó để nói chắc. Chọn nhầm hàm có thể ra số khác với đáp án mà bạn không biết vì sao, nên bạn hỏi TA để chắc nhé.</div>
-          <div class="btn-row">
-            <button class="btn primary">Hỏi TA ngay (8:00–22:00)</button>
-            <button class="btn">Tự tra công thức §3.3</button>
-          </div>
-          <div class="callout c1">②</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card legend">
-      <b>①②</b> — vị trí 2 nguyên tắc HAX/PAIR và 2 mức tự chủ được thể hiện trên màn hình này:<br>
-      <b>①</b> Kịch bản #5 (đắt nhất) — nguyên tắc <b>G10 — thu hẹp phạm vi khi nghi ngờ</b>: AI không tự xác nhận tài liệu đúng/sai, chỉ nêu điều kiện toán tổng quát rồi dừng, chuyển quyết định cho giảng viên (mức tự chủ: <i>cấm</i> đối với việc "tự xác nhận tài liệu"; nhánh "chuyển người" dùng `chuyen_TA` ở mức <i>tự làm</i>).<br>
-      <b>②</b> Kịch bản #4 (đắt nhất) — nguyên tắc <b>G1 — làm rõ hệ thống làm được gì</b>: hai nhãn "✓ từ trang khoá học" / "⚠ không có trong tài liệu" tách rõ phần AI có nguồn (`tra_cuu_tai_lieu`, mức <i>tự làm</i>) và phần AI không có nguồn, thay vì trả lời đồng nhất; nút "Hỏi TA ngay" là nguyên tắc <b>PAIR — Errors + Graceful Failure</b> (đường lui gắn với đúng loại lỗi: thiếu nguồn → chuyển TA).
-    </div>
-
-    <div class="footer-note">
-      Prototype tĩnh, dữ liệu dựng, không gọi AI thật, không backend. Xây bằng HTML/CSS thuần theo đúng ràng buộc "1–2 màn hình, cho ca khó nhất" của <code>02-guide.md</code> §5.
-    </div>
-  </div>
-
-  <!-- SCREEN 2: TA/giảng viên queue -->
-  <div class="screen" id="s2">
-    <div class="card">
-      <h1>Hàng chờ câu hỏi được chuyển</h1>
-      <div class="meta">Khoá Nhập môn phân tích dữ liệu · Buổi 3</div>
-      <table>
-        <tr><th>Giờ gửi</th><th>Câu hỏi</th><th>Loại</th><th>Trạng thái</th><th>Hành động</th></tr>
-        <tr>
-          <td>22:14</td>
-          <td>"Tài liệu ghi 'độ lệch chuẩn luôn nhỏ hơn phương sai'... tài liệu sai hay em sai ạ?" (trích §3.3)</td>
-          <td><span class="tag high">nghi vấn lỗi tài liệu — escalate giảng viên</span></td>
-          <td>⏳ chưa xác nhận</td>
-          <td><button class="btn primary">Xác nhận tài liệu sai</button><br><button class="btn" style="margin-top:4px">Xác nhận tài liệu đúng</button></td>
-        </tr>
-        <tr>
-          <td>22:20</td>
-          <td>"Hạn nộp bài 3 là khi nào ạ? ... tính độ lệch chuẩn bằng Excel dùng hàm gì?"</td>
-          <td><span class="tag normal">câu hỏi thường — TA trả lời</span></td>
-          <td>Đang chờ TA</td>
-          <td><button class="btn">Trả lời trực tiếp</button></td>
-        </tr>
-      </table>
-      <div class="footer-note">
-        Mục "nghi vấn lỗi tài liệu" chỉ do giảng viên xác nhận (không cho TA tự xác nhận thay) — đúng luật thêm ở §4: TA phải escalate, không tự trả lời thay cho các câu bị gắn nhãn này. Đây là màn hình bonus riêng của track T2 ("có màn hình phía TA — hàng chờ câu được chuyển").
-      </div>
-    </div>
-  </div>
-
-</div>
-
+<header>
+ <h1>Prototype · T2 Giáo dục — trợ lý học bài tối muộn (2 ca đắt nhất)</h1>
+ <div class="sub">Cùng thiết kế chặng 3–4. Dữ liệu dựng khoá «Nhập môn phân tích dữ liệu» · buổi 3. Không gọi AI thật. Đây là prototype demo, không phải giao diện production.</div>
+ <div class="toggle"><span>Ca demo:</span>
+  <button data-s="4" class="on">Ca #4 — hạn nộp + hàm Excel</button>
+  <button data-s="5">Ca #5 — tài liệu §3.3 nghi sai</button>
+ </div>
+ <div class="toggle" id="faq-toggle"><span>Mức tự chủ của <code>dang_FAQ</code> (chỉ ca #5):</span>
+  <button data-l="1">① Tự đăng ngay</button>
+  <button data-l="2" class="on">② Cần duyệt — nhóm chọn</button>
+  <button data-l="3">③ Cấm FAQ</button>
+  <span style="margin-left:14px"><label><input type="checkbox" id="ann" checked> Hiện số chú thích HAX/PAIR</label></span>
+ </div>
+</header>
+<main>
+ <section class="phone" id="phone">
+  <div class="bar"><span>Khoá học · Trợ lý học bài (AI)</span><span>22:14</span></div>
+  <div class="course"><b>Buổi 3 · Thống kê mô tả</b> · Bài tập 3 đang mở · hạn 13/11/2026 23:59<br>Giờ TA: 08:00–22:00 · hiện ngoài giờ (sẽ trả lời sáng mai)</div>
+  <div class="chat" id="chat"></div>
+ </section>
+ <aside>
+  <div class="panel"><h2>Lời hứa với học viên ở ca / mức này</h2><div class="promise" id="promise"></div></div>
+  <div class="panel"><h2>Mức tự chủ của 4 tool (dòng tô vàng là tool đang đổi)</h2>
+   <table><tr><th>Tool</th><th>Mức</th><th>Vì sao (cái giá khi sai)</th></tr><tbody id="tools"></tbody></table></div>
+  <div class="panel" id="ta-box"><h2>Màn hình phía TA (bonus nhẹ)</h2><div class="ta-panel" id="ta-queue"></div></div>
+  <div class="panel"><h2>Chú thích: nguyên tắc nào nằm ở đâu</h2><ul class="ann" id="ann-list"></ul></div>
+ </aside>
+</main>
+<div class="foot">LAB5 · AI20K K5 · Ngày 5 · T2 Giáo dục · Nhóm HuyHung. Một file HTML, không gọi AI thật, không gửi dữ liệu đi đâu.</div>
 <script>
-  document.querySelectorAll('.tab').forEach(function(tab){
-    tab.addEventListener('click', function(){
-      document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-      document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.screen).classList.add('active');
-    });
-  });
-</script>
-</body>
-</html>
+const $=s=>document.querySelector(s);
+let S=4, L=2, state='start';
+
+function me(x){return `<div class="me">${x}</div>`}
+function ai(x){return `<div class="ai"><div class="who">Trợ lý học bài (AI) · Study mode</div>${x}</div>`}
+
+function render(){
+  let h='';
+  if(S==4){
+    h+=me('Hạn nộp bài 3 là khi nào ạ? Với cả tính độ lệch chuẩn bằng Excel thì dùng hàm gì?');
+    if(state=='ta'){
+      h+=ai(`Đã chuyển câu hỏi về hàm bảng tính cho TA. Mã: <b>Q-3-Excel</b>. Giờ TA 08:00–22:00 — bạn hỏi lúc 22:14 nên TA trả lời <b>dự kiến sáng mai</b>. Bạn không phải kể lại: TA thấy sẵn Bài tập 3 đang mở + bạn hỏi hàm độ lệch chuẩn.`);
+    } else {
+      h+=ai(`
+        <div class="part">
+          <span class="src-ok"><span class="n">1</span>✓ từ trang khoá học</span>
+          <div style="margin-top:4px">Theo trang khoá học, <b>Bài tập 3 hạn nộp 23:59 ngày 13/11/2026 và đang mở</b> (khác Bài tập 2 đã hết hạn 06/11, đã có đáp án).</div>
+          <div class="ev">Dựa vào: Dữ liệu B · Bài tập 3 · trạng thái Đang mở</div>
+        </div>
+        <div class="part">
+          <span class="src-no"><span class="n">2</span>⚠ không có trong tài liệu</span>
+          <div style="margin-top:4px">Về hàm tính độ lệch chuẩn trên bảng tính: tài liệu buổi 3 chỉ dạy công thức (§3.3), <b>không ghi rõ dùng hàm nào hay phần mềm nào</b> — mình không có thông tin đó để nói chắc. Bạn nên hỏi TA để chọn đúng hàm giảng viên muốn.</div>
+          <div class="box warn"><span class="n">3</span>Phần này ngoài phạm vi tài liệu buổi đã học. Mình không bịa tên hàm.
+            <div class="btns">
+              <button class="btn pri" onclick="go('ta')"><span class="n">4</span>Hỏi TA ngay</button>
+              <button class="btn" onclick="alert('Gợi ý bước: mở §3.3, tính căn bậc hai của phương sai theo công thức đã học — không cần tên hàm.')">Xem gợi ý công thức §3.3</button>
+            </div>
+          </div>
+        </div>
+      `);
+    }
+  } else {
+    h+=me('Tài liệu ghi «độ lệch chuẩn luôn nhỏ hơn phương sai» nhưng ví dụ lớp không đúng vậy, tài liệu sai hay em sai?');
+    if(L==1){
+      if(state=='posted'){
+        h+=ai(`<div class="box red"><span class="n">4</span><b>Đã đăng FAQ cả lớp</b> (tự làm). Nhiều người đã đọc. Gỡ được nhưng niềm tin sai có thể đã lan.<br><small>Đây là rủi ro của mức ① — đúng cơ chế kịch bản #5.</small></div>
+          <div class="box warn">Nội dung đã đăng: «§3.3 có thể sai khi phương sai &lt; 1…»</div>`);
+      } else {
+        h+=ai(`Mình thấy điểm cần xem lại ở §3.3. Về mặt toán: câu «độ lệch chuẩn luôn nhỏ hơn phương sai» chỉ đúng khi phương sai &gt; 1.
+          <div class="box red" style="margin-top:8px"><b>Rủi ro mức ①:</b> AI tự đăng FAQ ngay để «giúp cả lớp nhanh».
+            <div class="btns"><button class="btn danger" onclick="go('posted')">Đăng FAQ ngay (AI tự làm)</button></div>
+          </div>
+          <div class="ev"><span class="n">2</span>Dựa vào: §3.3 Phương sai và độ lệch chuẩn · chưa có xác nhận giảng viên</div>`);
+      }
+    } else if(L==2){
+      if(state=='escalated'){
+        h+=ai(`<div class="box done"><span class="n">4</span><b>Đã chuyển giảng viên</b> qua hàng chờ TA (cờ ưu tiên cao · escalate). FAQ về §3.3 tạm <b>khoá đăng công khai</b> tới khi giảng viên xác nhận.</div>
+          <div class="box hold">Trạng thái mục §3.3: <b>⏳ Chưa xác nhận — đang chờ giảng viên</b>. Mọi học viên hỏi tới mục này đều thấy cảnh báo này (không chỉ bạn).</div>
+          <div class="ev">Bạn sẽ được báo khi có xác nhận chính thức. Tạm ghi chú «chưa chắc» cạnh §3.3 và học phần khác.</div>`);
+      } else {
+        h+=ai(`
+          <span class="conf"><span class="n">1</span>Mình không đủ thẩm quyền khẳng định tài liệu đúng/sai</span>
+          <div style="margin-top:6px"><span class="n">3</span>Mình không tự chọn «tài liệu đúng» hay «tài liệu sai». Về mặt toán tổng quát: câu «độ lệch chuẩn luôn nhỏ hơn phương sai» chỉ đúng khi phương sai &gt; 1; nếu phương sai &lt; 1 thì căn bậc hai lại lớn hơn chính nó.</div>
+          <div class="box warn" style="margin-top:8px">
+            <b>Vì sao mình không tự trả lời dứt:</b> đây là nội dung tài liệu khoá học, không thuộc thẩm quyền trợ lý.
+            <div class="chip" style="margin-top:6px"><span class="src-ok">chip trích dẫn · §3.3 Phương sai và độ lệch chuẩn</span></div>
+            <div class="btns" style="margin-top:8px">
+              <button class="btn pri" onclick="go('escalated')"><span class="n">4</span>Chuyển giảng viên kiểm tra §3.3</button>
+              <button class="btn" disabled title="Cần duyệt trước khi đăng"><span class="n">5</span>Đề xuất FAQ (chờ duyệt)</button>
+            </div>
+          </div>
+          <div class="ev"><span class="n">2</span>Dựa vào: tài liệu buổi 3 §3.3 · chưa có xác nhận giảng viên · <code>dang_FAQ</code> = cần duyệt</div>
+        `);
+      }
+    } else {
+      h+=ai(`Mình thấy điểm cần xem lại ở §3.3 (nguyên lý toán như trên).
+        <div class="box hold"><span class="n">4</span>Đã chuyển giảng viên. <b>FAQ bị cấm</b> — không có đường chia sẻ câu hỏi này cho cả lớp.</div>
+        <div class="box warn" style="font-size:13px"><b>Giá của mức ③:</b> an toàn khỏi lan tin sai, nhưng mất giá trị «nhiều học viên tối đó cũng thắc mắc y vậy». Nhóm loại mức này vì cost-of-error ưu tiên chặn lan rộng <i>vẫn giữ</i> FAQ khi có người duyệt.</div>
+        <div class="btns"><button class="btn pri" onclick="go('escalated')">Chuyển giảng viên</button></div>`);
+      if(state=='escalated'){
+        h=me('Tài liệu ghi «độ lệch chuẩn luôn nhỏ hơn phương sai» nhưng ví dụ lớp không đúng vậy, tài liệu sai hay em sai?')
+          +ai(`Đã chuyển giảng viên. FAQ bị cấm nên không đề xuất đăng công khai.
+            <div class="box done">Trạng thái: chờ giảng viên xác nhận §3.3.</div>`);
+      }
+    }
+  }
+  $('#chat').innerHTML=h;
+
+  // promise
+  const P4='"Mình trả lời chắc phần có nguồn; phần không có nguồn thì nói rõ và mở đường hỏi TA." Học viên tối muộn vẫn được hạn nộp đúng ngay, không bị bịa hàm Excel.';
+  const P5={
+    1:'"Mình đăng FAQ ngay giúp cả lớp." Nhanh — nhưng đúng cơ chế lan tin sai của kịch bản #5.',
+    2:'"Mình nêu điều kiện toán, dừng xác nhận đúng/sai, chuyển giảng viên; FAQ chỉ đăng sau khi người duyệt." <b>Mức nhóm chọn.</b>',
+    3:'"Mình không bao giờ đăng FAQ." An toàn tuyệt đối khỏi lan rộng, mất giá trị chia sẻ câu hỏi hay.'
+  };
+  $('#promise').innerHTML=S==4?P4:P5[L];
+
+  // tools table
+  const faqLv={
+    1:['Tự làm','p-auto','Đăng ngay — nhiều người đã đọc; gỡ được nhưng niềm tin sai khó đảo.',1],
+    2:['Cần duyệt','p-ask','Một bước duyệt chặn lan ra cả lớp trước khi đăng. Nhóm chọn.',1],
+    3:['Cấm','p-no','Không lan tin sai, nhưng mất chia sẻ câu hỏi hay cho cả lớp.',1]
+  }[L];
+  const T=[
+    ['tra_cuu_tai_lieu','Tự làm','p-auto','Chỉ đọc; kèm mã mục để học viên tự đối chiếu.',S==4?1:0],
+    ['goi_y_bai_tap','Tự làm (giới hạn)','p-auto','Bài đang mở: chỉ gợi bước đầu; cấm đáp số / nhận xét hộ.',0],
+    ['chuyen_TA','Tự làm','p-auto','Đường lui an toàn; sai chỉ hơi tốn thời gian TA.',S==4||(S==5&&L>=2)?1:0],
+    ['dang_FAQ',faqLv[0],faqLv[1],faqLv[2],S==5?1:0]
+  ];
+  // when S==4, faq stays at group choice (cần duyệt) without highlight change focus
+  if(S==4){
+    T[3]=['dang_FAQ','Cần duyệt','p-ask','Không dùng trong ca #4; giữ mức nhóm đã chốt.',0];
+  }
+  $('#tools').innerHTML=T.map(r=>`<tr class="${r[4]?'changed':''}"><td><code>${r[0]}</code></td><td><span class="pill ${r[2]}">${r[1]}</span></td><td>${r[3]}</td></tr>`).join('');
+
+  // TA queue
+  let ta='';
+  if(S==4 && state=='ta'){
+    ta=`<div class="ta-row"><div><b>Q-3-Excel</b> · hỏi hàm độ lệch chuẩn Excel<br><small>Học viên · 22:14 · Bài tập 3 đang mở</small></div><span class="badge lo">thường</span></div>
+         <div style="color:var(--mut);font-size:12.5px;margin-top:6px">Ngoài giờ TA → trả lời dự kiến sáng mai. Không escalate giảng viên.</div>`;
+  } else if(S==5 && (state=='escalated' || L==2 && state=='escalated')){
+    ta=`<div class="ta-row"><div><b>Q-3.3-DOC</b> · nghi vấn lỗi tài liệu §3.3<br><small>Học viên · 22:14 · cờ «nghi vấn lỗi tài liệu»</small></div><span class="badge hi">escalate GV</span></div>
+         <div style="color:var(--mut);font-size:12.5px;margin-top:6px">Luật thêm §4: TA <b>không</b> tự trả lời thay — phải escalate giảng viên. FAQ §3.3 tạm khoá.</div>`;
+  } else if(S==5 && L==1 && state=='posted'){
+    ta=`<div class="ta-row"><div><b>FAQ đã đăng</b> · §3.3 — chưa qua duyệt<br><small>Cả lớp có thể đã đọc</small></div><span class="badge hi">rủi ro</span></div>`;
+  } else {
+    ta=`<div style="color:var(--mut)">Hàng chờ trống — bấm nút trên chat để tạo phiếu chuyển.</div>`;
+  }
+  $('#ta-queue').innerHTML=ta;
+
+  // annotations
+  let A=[];
+  if(S==4){
+    A=[
+      ['1','HAX G1 · làm rõ hệ thống làm được gì','Nhãn «✓ từ trang khoá học» — phần AI có nguồn, trả lời chắc.'],
+      ['2','HAX G1 + G2 · làm rõ tới đâu','Nhãn «⚠ không có trong tài liệu» — phần AI không có nguồn, không bịa.'],
+      ['3','HAX G10 · thu hẹp khi nghi ngờ','Không đoán tên hàm Excel; trả lời kèm giới hạn.'],
+      ['4','PAIR Errors + Graceful Failure','Nút [Hỏi TA ngay] — đường lui riêng cho phần thiếu nguồn.']
+    ];
+  } else {
+    A=[
+      ['1','HAX G10 · thu hẹp khi nghi ngờ','Không tự khẳng định tài liệu đúng/sai; chỉ nêu điều kiện toán rồi dừng.'],
+      ['2','PAIR Explainability + Trust','Dòng «Dựa vào» + chip §3.3 — học viên tự kiểm căn cứ.'],
+      ['3','HAX G1 · làm rõ được gì','Ghi rõ: nội dung tài liệu khoá không thuộc thẩm quyền trợ lý.'],
+      ['4','PAIR Errors + Graceful Failure','Đường lui: chuyển giảng viên (qua TA escalate), khác nút Hỏi TA của ca #4.'],
+      ['5','HAX G8 + mức tự chủ','FAQ cần duyệt — nút đề xuất FAQ bị khoá/chờ, không tự đăng.']
+    ];
+    if(L==1) A=A.filter(a=>['1','2','4'].includes(a[0])).concat([['4','Cảnh báo mức quá tay','Tự đăng FAQ = đúng lỗi lan rộng của kịch bản #5.']]);
+    if(L==3) A=A.filter(a=>['1','2','3','4'].includes(a[0]));
+  }
+  $('#ann-list').innerHTML=A.map(a=>`<li><span class="n">${a[0]}</span><b>${a[1]}</b> — ${a[2]}</li>`).join('');
+
+  // show/hide faq toggle
+  $('#faq-toggle').style.opacity=S==5?1:0.45;
+}
+
+function go(s){state=s;render()}
+
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('[data-s]').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');S=+b.dataset.s;state='start';render();
+});
+document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{
+  if(S!==5){S=5;document.querySelectorAll('[data-s]').forEach(x=>x.classList.toggle('on',x.dataset.s==='5'));}
+  document.querySelectorAll('[data-l]').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');L=+b.dataset.l;state='start';render();
+});
+$('#ann').onchange=e=>document.body.classList.toggle('hide-n',!e.target.checked);
+render();
+</script></body></html>

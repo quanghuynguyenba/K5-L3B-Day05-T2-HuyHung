@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trợ lý học bài · mô phỏng (T2)</title>
+  <style>
+    :root {
+      --ink: #1a1f1c;
+      --mut: #6a706c;
+      --line: #e2ddd4;
+      --bg: #eef1ef;
+      --card: #fff;
+      --ai: #f3f1eb;
+      --me: #2a5f8f;
+      --ok: #1f6b45;
+      --okb: #e4f2ea;
+      --warn: #8a6516;
+      --warnb: #fbefd3;
+      --bad: #a33b2b;
+      --badb: #f8e3df;
+      --chip: #e8e5de;
+      --ta: #5a3d7a;
+      --tab: #fafaf7;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: "Be Vietnam Pro", "Noto Sans", "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.45;
+      overflow: hidden
+    }
+
+    .app {
+      width: 100%;
+      height: 100%;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    .head {
+      padding: 14px 20px 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fafaf7;
+      flex-shrink: 0
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700
+    }
+
+    .head .meta {
+      margin-top: 4px;
+      font-size: 12.5px;
+      color: var(--mut)
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-top: 12px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .tab {
+      position: relative;
+      border: 0;
+      background: transparent;
+      padding: 10px 16px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--mut);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px
+    }
+
+    .tab.on {
+      color: var(--ink);
+      border-bottom-color: var(--ink)
+    }
+
+    .tab .badge {
+      display: none;
+      position: absolute;
+      top: 6px;
+      right: 4px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--bad);
+      color: #fff;
+      font-size: 11px;
+      line-height: 18px;
+      font-weight: 700
+    }
+
+    .tab .badge.show {
+      display: inline-block
+    }
+
+    .banner {
+      margin: 0;
+      padding: 10px 20px;
+      background: #e8f0f7;
+      font-size: 12.5px;
+      color: #355a78;
+      border-bottom: 1px solid #d5e3ef;
+      flex-shrink: 0
+    }
+
+    .pane {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      min-height: 0
+    }
+
+    .pane.on {
+      display: flex
+    }
+
+    .msgs {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      max-width: min(640px, 92%)
+    }
+
+    .row.me {
+      align-self: flex-end
+    }
+
+    .row.ai,
+    .row.ta,
+    .row.sys {
+      align-self: flex-start
+    }
+
+    .bubble {
+      padding: 10px 12px;
+      border-radius: 14px;
+      white-space: pre-wrap
+    }
+
+    .row.me .bubble {
+      background: var(--me);
+      color: #fff;
+      border-bottom-right-radius: 4px
+    }
+
+    .row.ai .bubble {
+      background: var(--ai);
+      border-bottom-left-radius: 4px
+    }
+
+    .row.ta .bubble {
+      background: #f3eef8;
+      border-bottom-left-radius: 4px;
+      border: 1px solid #e0d4ec
+    }
+
+    .row.sys .bubble {
+      background: #f7f6f3;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      font-size: 13.5px;
+      color: var(--mut)
+    }
+
+    .who {
+      font-size: 11.5px;
+      color: var(--mut);
+      margin-bottom: 3px
+    }
+
+    .who.ta {
+      color: var(--ta);
+      font-weight: 600
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin: 2px 4px 6px 0
+    }
+
+    .tag.ok {
+      background: var(--okb);
+      color: var(--ok)
+    }
+
+    .tag.warn {
+      background: var(--warnb);
+      color: var(--warn)
+    }
+
+    .tag.bad {
+      background: var(--badb);
+      color: var(--bad)
+    }
+
+    .tag.info {
+      background: #e3ecf6;
+      color: #28507a
+    }
+
+    .tag.ta {
+      background: #efe6f7;
+      color: var(--ta)
+    }
+
+    .ev {
+      font-size: 12px;
+      color: var(--mut);
+      border-left: 3px solid var(--line);
+      padding-left: 8px;
+      margin-top: 6px
+    }
+
+    .box {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13.5px
+    }
+
+    .box.warn {
+      background: var(--warnb);
+      border: 1px solid #ecd59e
+    }
+
+    .box.ok {
+      background: var(--okb);
+      border: 1px solid #bcd9c8
+    }
+
+    .box.info {
+      background: #e3ecf6;
+      border: 1px solid #bcd0e6
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 7px 11px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--chip)
+    }
+
+    .btn.pri {
+      background: var(--ok);
+      color: #fff
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed
+    }
+
+    .composer {
+      border-top: 1px solid var(--line);
+      padding: 12px 20px 14px;
+      background: #fafaf7;
+      flex-shrink: 0
+    }
+
+    .composer-inner {
+      max-width: 820px;
+      margin: 0 auto
+    }
+
+    .hints {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px
+    }
+
+    .hint {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--ink)
+    }
+
+    .hint:hover {
+      border-color: var(--me);
+      color: var(--me)
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px
+    }
+
+    .input-row input {
+      flex: 1;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit
+    }
+
+    .input-row input:focus {
+      outline: none;
+      border-color: #7aa0c4
+    }
+
+    .input-row button {
+      border: 0;
+      border-radius: 12px;
+      padding: 0 16px;
+      background: var(--me);
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    .pane[data-pane="ta"] .input-row button {
+      background: var(--ta)
+    }
+
+    .note {
+      font-size: 11.5px;
+      color: var(--mut);
+      margin-top: 6px;
+      text-align: center
+    }
+
+    .typing {
+      font-size: 12.5px;
+      color: var(--mut);
+      padding: 0 4px
+    }
+
+    .hidden {
+      display: none !important
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="head">
+      <h1 id="title">Trợ lý học bài (AI) · Study mode</h1>
+      <div class="meta">Nhập môn phân tích dữ liệu · Buổi 3 · mô phỏng theo spec — không gọi AI thật</div>
+      <div class="tabs">
+        <button type="button" class="tab on" data-tab="ai">Trợ lý AI</button>
+        <button type="button" class="tab" data-tab="ta">Chat TA <span class="badge" id="ta-badge">1</span></button>
+      </div>
+    </div>
+    <div class="banner" id="banner"><b>Bài tập 3</b> đang mở · hạn <b>13/11/2026 23:59</b> · Giờ TA 08:00–22:00 (đang
+      ngoài giờ)</div>
+
+    <div class="pane on" data-pane="ai">
+      <div class="msgs" id="msgs-ai"></div>
+    </div>
+    <div class="pane" data-pane="ta">
+      <div class="msgs" id="msgs-ta"></div>
+    </div>
+
+    <div class="composer">
+      <div class="composer-inner">
+        <div class="hints" id="hints"></div>
+        <div class="input-row">
+          <input id="q" type="text" placeholder="Hỏi bài… (hoặc bấm gợi ý bên trên)" autocomplete="off">
+          <button id="send" type="button">Gửi</button>
+        </div>
+        <div class="note" id="note">Rule-based mock · phản hồi lấy từ hành vi đã thiết kế trong spec.md</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const $ = s => document.querySelector(s);
+    const msgsAi = $('#msgs-ai');
+    const msgsTa = $('#msgs-ta');
+    const q = $('#q');
+    const hintsEl = $('#hints');
+    const taBadge = $('#ta-badge');
+    let tab = 'ai';
+    let lastUserQ = '';
+    let taUnread = 0;
+
+    const HINTS = [
+      { label: 'Hạn + hàm Excel', text: 'Hạn nộp bài 3 là khi nào ạ? Với cả tính độ lệch chuẩn bằng Excel thì dùng hàm gì?' },
+      { label: 'Tài liệu §3.3 sai?', text: 'Tài liệu ghi «độ lệch chuẩn luôn nhỏ hơn phương sai» nhưng ví dụ lớp không đúng vậy, tài liệu sai hay em sai?' },
+      { label: 'Xin đáp số bài 3', text: 'Bài 3 câu (a) em tính trung bình 15.25, trung vị 11.5, đúng không ạ?' },
+      { label: 'Giải hộ bài 3', text: 'Giải hộ bài 3 đi, mai nộp rồi, viết sẵn em copy vào' },
+      { label: 'Slide 12', text: 'Độ lệch chuẩn ở slide 12 ấy, em không hiểu' },
+      { label: 'Buổi 7 trước', text: 'Buổi 7 Kiểm định giả thuyết và p-value học gì ạ, giải thích trước cho em' },
+      { label: 'Bài 2 đã hết hạn', text: 'Bài tập 2 đáp án là 6 à? Giải thích lại bài đó đi' },
+      { label: 'Trung vị vs TB', text: 'Trung vị khác trung bình cộng chỗ nào ạ? Khi nào dùng cái nào?' },
+    ];
+
+    HINTS.forEach(h => {
+      const b = document.createElement('button');
+      b.className = 'hint';
+      b.type = 'button';
+      b.textContent = h.label;
+      b.onclick = () => { switchTab('ai'); q.value = h.text; send(); };
+      hintsEl.appendChild(b);
+    });
+
+    function switchTab(name) {
+      tab = name;
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === name));
+      document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.dataset.pane === name));
+      $('#title').textContent = name === 'ai'
+        ? 'Trợ lý học bài (AI) · Study mode'
+        : 'Chat với TA · hàng chờ hỗ trợ';
+      $('#banner').innerHTML = name === 'ai'
+        ? '<b>Bài tập 3</b> đang mở · hạn <b>13/11/2026 23:59</b> · Giờ TA 08:00–22:00 (đang ngoài giờ)'
+        : '<b>TA Minh</b> · giờ trực 08:00–22:00 · ngoài giờ vẫn nhận tin, trả lời khi vào ca (mô phỏng: trả lời ngay để demo)';
+      hintsEl.classList.toggle('hidden', name !== 'ai');
+      q.placeholder = name === 'ai' ? 'Hỏi bài… (hoặc bấm gợi ý bên trên)' : 'Nhắn thêm cho TA…';
+      $('#note').textContent = name === 'ai'
+        ? 'Rule-based mock · phản hồi lấy từ hành vi đã thiết kế trong spec.md'
+        : 'Tab TA · tin chuyển từ trợ lý AI; TA mock trả lời sau khi nhận tin';
+      if (name === 'ta') {
+        taUnread = 0;
+        taBadge.classList.remove('show');
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach(t => t.onclick = () => switchTab(t.dataset.tab));
+
+    function box(el) {
+      return tab === 'ai' ? msgsAi : (el || msgsTa);
+    }
+
+    function addMe(text, target) {
+      const el = target || (tab === 'ai' ? msgsAi : msgsTa);
+      const row = document.createElement('div');
+      row.className = 'row me';
+      row.innerHTML = `<div class="bubble"></div>`;
+      row.querySelector('.bubble').textContent = text;
+      el.appendChild(row);
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function addBubble(el, kind, who, html, bindActs) {
+      const row = document.createElement('div');
+      row.className = 'row ' + kind;
+      const whoHtml = who ? `<div class="who${kind === 'ta' ? ' ta' : ''}">${who}</div>` : '';
+      row.innerHTML = `${whoHtml}<div class="bubble">${html}</div>`;
+      el.appendChild(row);
+      el.scrollTop = el.scrollHeight;
+      if (bindActs) {
+        row.querySelectorAll('[data-act]').forEach(btn => {
+          btn.onclick = () => handleAction(btn.dataset.act, btn);
+        });
+      }
+      return row;
+    }
+
+    function addAi(html) {
+      return addBubble(msgsAi, 'ai', 'Trợ lý học bài (AI)', html, true);
+    }
+
+    function addTa(html) {
+      const row = addBubble(msgsTa, 'ta', 'TA Minh', html, false);
+      if (tab !== 'ta') {
+        taUnread += 1;
+        taBadge.textContent = String(taUnread);
+        taBadge.classList.add('show');
+      }
+      return row;
+    }
+
+    function addSys(html) {
+      return addBubble(msgsTa, 'sys', '', html, false);
+    }
+
+    function typingThen(el, label, fn, ms) {
+      const t = document.createElement('div');
+      t.className = 'typing';
+      t.textContent = label || 'Đang soạn…';
+      el.appendChild(t);
+      el.scrollTop = el.scrollHeight;
+      setTimeout(() => { t.remove(); fn(); }, ms || 450);
+    }
+
+    function transferToTa(kind) {
+      // kind: 'excel' | 'doc_error'
+      const code = kind === 'excel' ? 'Q-3-Excel' : 'Q-3.3-DOC';
+      const summary = kind === 'excel'
+        ? 'Bài tập 3 đang mở · hỏi hàm độ lệch chuẩn trên bảng tính (không có trong tài liệu)'
+        : 'Nghi vấn lỗi tài liệu §3.3 · cờ ưu tiên cao · escalate giảng viên';
+
+      addAi(kind === 'excel'
+        ? `<span class="tag info">đã chuyển TA</span>Đã chuyển câu hỏi cho TA · mã <b>${code}</b>. Đang mở tab <b>Chat TA</b>…`
+        : `<span class="tag info">⏳ Chưa xác nhận — đã chuyển qua TA escalate giảng viên</span>Mã <b>${code}</b>. FAQ §3.3 tạm khoá. Đang mở tab <b>Chat TA</b>…`);
+
+      switchTab('ta');
+
+      addSys(`
+    <span class="tag ta">phiếu chuyển từ trợ lý AI</span>
+    <b>Mã ${code}</b>${kind === 'doc_error' ? ' · <span class="tag bad">escalate GV</span>' : ' · <span class="tag info">thường</span>'}
+    <div style="margin-top:6px"><b>Tóm tắt sẵn cho TA</b> (học viên không phải kể lại):<br>${summary}</div>
+    <div class="ev">Câu gốc: «${escapeHtml(lastUserQ)}»</div>
+  `);
+
+      addMe(lastUserQ || '(đã chuyển từ trợ lý AI)', msgsTa);
+
+      typingThen(msgsTa, 'TA Minh đang nhập…', () => {
+        if (kind === 'excel') {
+          addTa(`
+        Chào bạn, mình nhận được phiếu <b>${code}</b>.
+        Giờ trực ghi 08:00–22:00 — tin ngoài giờ vẫn vào hàng chờ; mình trả lời luôn để bạn không chờ tới sáng (mô phỏng demo).
+        <div class="box ok">
+          Giảng viên dùng <b>Excel</b> cho khoá này. Hàm độ lệch chuẩn mẫu: <b>STDEV.S</b> (hoặc <code>=STDEV.S(phạm_vi)</code>).
+          Nếu dùng Google Sheets: <code>STDEV</code>.
+        </div>
+        Lưu ý: Bài tập 3 vẫn đang mở — mình chỉ nói <b>tên hàm</b>, không xác nhận đáp số bài của bạn.
+        Còn thắc mắc gì thêm cứ nhắn tiếp ở đây.
+      `);
+        } else {
+          addTa(`
+        Mình nhận phiếu <b>${code}</b> với cờ <b>nghi vấn lỗi tài liệu</b>.
+        Theo luật khoá: TA <b>không tự xác nhận</b> tài liệu đúng/sai — mình đã <b>escalate lên giảng viên</b>.
+        <div class="box warn">
+          Trạng thái §3.3: <b>⏳ chờ giảng viên xác nhận</b>. FAQ về mục này tạm khoá đăng công khai.
+          Bạn sẽ được báo khi có xác nhận chính thức.
+        </div>
+        Tạm thời bạn có thể ghi chú «chưa chắc» cạnh §3.3 và học phần khác. Cần mình chuyển thêm ghi chú gì cho giảng viên không?
+      `);
+        }
+      }, 900);
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function handleAction(act, btn) {
+      if (act === 'ask_ta') {
+        btn.disabled = true;
+        const other = btn.parentElement?.querySelector('[data-act="hint_formula"]');
+        if (other) other.disabled = true;
+        transferToTa('excel');
+      }
+      if (act === 'hint_formula') {
+        btn.disabled = true;
+        typingThen(msgsAi, 'Đang soạn…', () => addAi(`
+      Gợi ý từ <b>§3.3</b> (không cần tên hàm): độ lệch chuẩn = căn bậc hai của phương sai.
+      Bạn mở bảng tính, tính phương sai theo công thức đã học, rồi lấy căn — đối chiếu với §3.3.
+      <div class="ev">Dựa vào: §3.3 · chỉ gợi bước, không đưa đáp số bài đang mở</div>
+    `));
+      }
+      if (act === 'escalate_gv') {
+        btn.disabled = true;
+        const faqBtn = btn.parentElement?.querySelector('[data-act="faq"]');
+        if (faqBtn) faqBtn.disabled = true;
+        transferToTa('doc_error');
+      }
+      if (act === 'faq') {
+        btn.disabled = true;
+        typingThen(msgsAi, 'Đang soạn…', () => addAi(`
+      <span class="tag warn">FAQ chờ duyệt</span>
+      Đã <b>đề xuất</b> đăng FAQ — chưa công khai cho cả lớp.
+      Giảng viên/TA duyệt trước khi đăng (<code>dang_FAQ</code> = cần người duyệt).
+    `));
+      }
+    }
+
+    function replyAi(text) {
+      const t = text.toLowerCase();
+
+      if ((t.includes('hạn') || t.includes('nộp')) && (t.includes('excel') || t.includes('hàm') || t.includes('độ lệch'))) {
+        return `
+      <div>
+        <span class="tag ok">✓ từ trang khoá học</span>
+        <div>Theo trang khoá học, <b>Bài tập 3 hạn nộp 23:59 ngày 13/11/2026 và đang mở</b> (khác Bài tập 2 đã hết hạn 06/11, đã có đáp án).</div>
+        <div class="ev">Dựa vào: trang khoá học · Bài tập 3 · trạng thái Đang mở</div>
+      </div>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)">
+        <span class="tag bad">⚠ không có trong tài liệu</span>
+        <div>Về hàm tính độ lệch chuẩn trên bảng tính: tài liệu buổi 3 chỉ dạy công thức, <b>không ghi rõ dùng hàm nào</b> — mình không có thông tin đó để nói chắc.</div>
+        <div class="box warn">Phần này ngoài phạm vi tài liệu. Mình không bịa tên hàm.
+          <div class="actions">
+            <button class="btn pri" data-act="ask_ta">Hỏi TA ngay</button>
+            <button class="btn" data-act="hint_formula">Xem gợi ý công thức §3.3</button>
+          </div>
+        </div>
+      </div>`;
+      }
+
+      if ((t.includes('tài liệu') && (t.includes('sai') || t.includes('đúng'))) ||
+        t.includes('nhỏ hơn phương sai') ||
+        (t.includes('phương sai') && t.includes('độ lệch') && t.includes('sai'))) {
+        return `
+      <span class="tag warn">Mình không đủ thẩm quyền khẳng định tài liệu đúng/sai</span>
+      <div style="margin-top:4px">Về mặt toán: câu «độ lệch chuẩn luôn nhỏ hơn phương sai» chỉ đúng khi phương sai &gt; 1; nếu phương sai &lt; 1, căn bậc hai lại lớn hơn chính nó.</div>
+      <div class="box warn">
+        <b>Vì sao mình không tự trả lời dứt:</b> nội dung tài liệu khoá không thuộc thẩm quyền trợ lý.
+        <div style="margin-top:6px"><span class="tag info">§3.3 Phương sai và độ lệch chuẩn</span></div>
+        <div class="actions">
+          <button class="btn pri" data-act="escalate_gv">Chuyển giảng viên kiểm tra §3.3</button>
+          <button class="btn" data-act="faq">Đề xuất FAQ (chờ duyệt)</button>
+        </div>
+      </div>
+      <div class="ev">Dựa vào: §3.3 · dang_FAQ = cần duyệt · escalate qua tab Chat TA</div>`;
+      }
+
+      if ((t.includes('đúng không') || t.includes('đúng ko')) && (t.includes('trung bình') || t.includes('trung vị') || t.includes('15.25') || t.includes('bài 3'))) {
+        return `
+      <span class="tag warn">Bài tập 3 đang mở — không xác nhận đáp số</span>
+      Mình không xác nhận số bạn tính được khi bài còn hạn.
+      Gợi ý bước: (1) tính tổng rồi chia số giá trị · (2) sắp xếp tăng dần rồi lấy giá trị giữa · (3) so sánh với ý «lương điển hình» khi có 45.
+      <div class="ev">goi_y_bai_tap · bài đang mở: chỉ gợi bước · cấm xác nhận đáp số</div>`;
+      }
+
+      if (t.includes('giải hộ') || t.includes('viết sẵn') || t.includes('copy vào')) {
+        return `
+      <span class="tag bad">Không giải hộ / không viết nhận xét hộ</span>
+      Bài tập 3 đang mở — mình chỉ gợi bước đầu, không viết câu để copy.
+      Thử: tính trung bình và trung vị; rồi hỏi «45 có gì khác biệt?»
+      <div class="ev">goi_y_bai_tap · bài đang mở · cấm đáp số / nhận xét hộ</div>`;
+      }
+
+      if (t.includes('slide')) {
+        return `
+      <span class="tag bad">⚠ nguồn không có</span>
+      Tài liệu buổi 3 <b>không có slide đánh số</b> — chỉ có §3.1 … §3.5.
+      Bạn hỏi độ lệch chuẩn: có phải ý <b>§3.3</b> không?
+      <div class="ev">Rubric #7 · hỏi lại một câu (G10)</div>`;
+      }
+
+      if (t.includes('buổi 7') || t.includes('p-value') || t.includes('kiểm định')) {
+        return `
+      <span class="tag info">Buổi chưa mở tài liệu</span>
+      Trang khoá học ghi buổi 7: <b>«Kiểm định giả thuyết và p-value»</b>. Tài liệu chi tiết chưa có — mình không giảng trước.
+      <div class="ev">Rubric #2 · tối đa một câu</div>`;
+      }
+
+      if (t.includes('bài tập 2') || t.includes('bài 2')) {
+        return `
+      <span class="tag ok">Bài tập 2 đã hết hạn · đáp án đã công bố</span>
+      Đáp án 07/11: trung bình của 4, 8, 6, 5, 7 là <b>6</b>.
+      Cách: (4+8+6+5+7) / 5 = 6.
+      <div class="ev">goi_y_bai_tap · bài hết hạn + có đáp án → giải đầy đủ</div>`;
+      }
+
+      if (t.includes('trung vị') || (t.includes('trung bình') && t.includes('khác'))) {
+        return `
+      <span class="tag ok">✓ từ tài liệu buổi 3</span>
+      <b>§3.1 Trung bình cộng:</b> tổng chia số giá trị; bị kéo bởi ngoại lai.<br>
+      <b>§3.2 Trung vị:</b> giá trị giữa khi sắp tăng dần; ít bị ngoại lai — dùng cho dữ liệu lệch.
+      <div class="box ok">Có ngoại lai → trung vị; cần tổng/quy mô → trung bình.</div>
+      <div class="ev">tra_cuu_tai_lieu · kèm mã mục §3.1 §3.2</div>`;
+      }
+
+      return `
+    <span class="tag warn">Cần rõ hơn một chút</span>
+    Mình chỉ dựa vào tài liệu buổi đã mở (1–3) và trang khoá học.
+    Bạn đang hỏi về <b>khái niệm §3.x</b>, <b>hạn bài tập</b>, hay <b>cách làm bước đầu</b>?
+    <div class="ev">G10 · thu hẹp khi nghi ngờ</div>`;
+    }
+
+    function replyTa(text) {
+      const t = text.toLowerCase();
+      if (t.includes('cảm ơn') || t.includes('cam on') || t.includes('ok') || t.includes('rõ')) {
+        return `Không có gì. Cứ nhắn nếu kẹt thêm — hoặc quay lại tab <b>Trợ lý AI</b> để hỏi khái niệm có trong tài liệu.`;
+      }
+      if (t.includes('hàm') || t.includes('excel') || t.includes('sheets')) {
+        return `Nhắc lại: Excel dùng <b>STDEV.S</b>; Sheets dùng <b>STDEV</b>. Mình không chấm / không xác nhận đáp số Bài tập 3 đang mở.`;
+      }
+      if (t.includes('giảng viên') || t.includes('§3.3') || t.includes('3.3') || t.includes('tài liệu')) {
+        return `Phiếu escalate §3.3 vẫn đang chờ giảng viên. Mình không tự kết luận đúng/sai tài liệu. Bạn sẽ được báo khi có xác nhận.`;
+      }
+      return `Mình đã nhận tin. Nếu liên quan bài đang mở, mình chỉ hỗ trợ hướng dẫn công cụ / quy trình — không giải hộ đáp số. Bạn mô tả thêm chỗ đang kẹt nhé.`;
+    }
+
+    function send() {
+      const text = q.value.trim();
+      if (!text) return;
+      q.value = '';
+
+      if (tab === 'ai') {
+        lastUserQ = text;
+        addMe(text, msgsAi);
+        typingThen(msgsAi, 'Đang soạn…', () => addAi(replyAi(text)));
+      } else {
+        addMe(text, msgsTa);
+        typingThen(msgsTa, 'TA Minh đang nhập…', () => addTa(replyTa(text)), 700);
+      }
+    }
+
+    $('#send').onclick = send;
+    q.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+
+    // greetings
+    addAi(`
+  Chào bạn. Mình là trợ lý học bài của khoá — giảng kèm trích tài liệu, gợi ý từng bước, hoặc nói rõ khi tài liệu không có.
+  <div class="ev">Bài đang mở: chỉ gợi bước · không đưa/xác nhận đáp số · không nhận xét năng lực</div>
+  Khi cần người: bấm <b>Hỏi TA</b> / <b>Chuyển giảng viên</b> — sẽ mở tab <b>Chat TA</b>.
+`);
+
+    addSys(`
+  <span class="tag ta">hàng chờ TA</span>
+  Chưa có phiếu nào. Khi trợ lý AI chuyển câu hỏi, tin nhắn sẽ xuất hiện ở đây và TA phản hồi.
+`);
+  </script>
+</body>
+
+</html>

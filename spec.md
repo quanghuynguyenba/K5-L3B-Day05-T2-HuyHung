@@ -6,17 +6,19 @@
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
-|  Vũ Tiến Hùng|2A202603882  |  |
-|  |  |  |
+|  Vũ Tiến Hùng|2A202603882  | Tìm hiểu $1, $2, $3, $4, xây dựng tài liệu |
+| Nguyễn Bá Quang Huy | 2A202603926 | Tìm hiểu $5, $6, xây dựng propotype  |
 |  |  |  |
 
 ## §1. Lát cắt & phạm vi
 
 - Lát cắt (chép từ track): Trong **trợ lý học bài của trang khoá học** (kiểu ChatGPT Study mode), khi **học viên** đang hỏi bài lúc tối muộn, khi không còn ai để hỏi, **AI giảng kèm trích tài liệu, hỏi lại cho rõ, gợi ý từng bước, hay nói thẳng "tài liệu không có, hỏi giảng viên"**, để học viên hiểu đúng bài mình đang học, không chép đáp án, không học sai mà không biết.
 - 3 việc tính năng KHÔNG làm, mỗi việc một câu vì sao:
-  1. Không giải hộ hoặc xác nhận đáp số bài tập đang mở (Bài tập 3, hạn 13/11/2026) — vì sao: mục tiêu của lát cắt là "không chép đáp án"; đưa đáp số khiến học viên học sai mà không biết, đúng kiểu lỗi "rẻ nhưng âm thầm" mà track mô tả, và bị cấm thẳng ở rubric riêng mục 3 và mục An toàn & đạo đức.
-  2. Không giảng nội dung các buổi chưa học (buổi 4–10) — vì sao: `tra_cuu_tai_lieu` chỉ có tài liệu buổi 1–3; buổi 4–10 chỉ có tên đề cương, chưa có nội dung, nên giảng trước là AI phải bịa (lớp rủi ro ① nguồn sự thật). Rubric riêng mục 2 chỉ cho phép "nói buổi nào sẽ học, giới thiệu tối đa một câu".
+  1. Không đưa, không xác nhận đáp số bài đang mở — vì sao: Vì đây là hệ thống đóng vai giảng viên hỗ trợ giảng dạy cho học sinh, nếu hệ thống này giải bài tập cho học sinh sẽ làm học sinh bị phụ thuộc, mất đi khả năng chủ động tư duy và chỉ chăm chăm việc hỏi cách làm bài để đối phó với bài tập giáo viên giao.
+  2. Không nhận xét năng lực người học — vì sao: Việc nhận xét năng lực người học sẽ phụ thuộc vào rất nhiều yếu tố, từ thái độ học trên lớp, kết quả qua các kỳ kiểm tra và đánh giá từ phía giáo viên, sẽ có những vấn đề mà con người mới cảm nhận được. VD 2 bạn học sinh có xếp loại học lực dựa trên điểm kiểm tra là gần như nhau. Trong đó có 1 bạn học chưa được tốt lắm, nhưng thái độ học của bạn đó rất nghiêm túc, luôn cố gắng tìm tòi, học lại các phần bài chưa hiểu thì bạn đó được đánh giá năng lực học tốt hơn so với bạn còn lại ham chơi, không chú tâm vào việc học. Đó là những điều mà AI chưa nhìn ra được nên để AI đánh giá năng lực người học là chưa thực tiễn.
   3. Không tự khẳng định tài liệu đúng hoặc tự sửa nội dung tài liệu khi nghi ngờ sai — vì sao: không có tool nào cho AI quyền chỉnh sửa tài liệu khoá học, việc này thuộc thẩm quyền giảng viên (lớp rủi ro ③ ngoài thẩm quyền); rubric riêng mục 6 yêu cầu chỉ nói "cần xem lại, báo giảng viên", không tự xác nhận đúng/sai.
+  4. Không giải hộ hoặc xác nhận đáp số bài tập đang mở (Bài tập 3, hạn 13/11/2026) — vì sao: mục tiêu của lát cắt là "không chép đáp án"; đưa đáp số khiến học viên học sai mà không biết, đúng kiểu lỗi "rẻ nhưng âm thầm" mà track mô tả, và bị cấm thẳng ở rubric riêng mục 3 và mục An toàn & đạo đức.
+  5. Không giảng nội dung các buổi chưa học (buổi 4–10) — vì sao: `tra_cuu_tai_lieu` chỉ có tài liệu buổi 1–3; buổi 4–10 chỉ có tên đề cương, chưa có nội dung, nên giảng trước là AI phải bịa (lớp rủi ro ① nguồn sự thật). Rubric riêng mục 2 chỉ cho phép "nói buổi nào sẽ học, giới thiệu tối đa một câu".
 
 ## §2. Kịch bản rủi ro (chặng 2)
 
@@ -77,25 +79,20 @@
 
 ## §5. Prototype (chặng 5)
 
-- Link hoặc file: `prototype/index.html` (mở bằng trình duyệt, không cần server) · Công cụ: HTML/CSS/JS thuần, tự viết tay (không dùng Lovable/v0/Figma) · Phần nào mock: toàn bộ — dữ liệu dựng cứng trong trang, không đăng nhập, không backend · Có lời gọi AI thật không: **không** (không nhận bonus "lời gọi AI thật" — ưu tiên đúng giới hạn "dữ liệu giả" hơn gọi thật mà lộ rủi ro).
-- 2 màn hình (chuyển bằng tab ở đầu trang):
-  - **Màn hình 1 — học viên:** dựng đúng 2 lượt chat của kịch bản #5 và #4 (2 kịch bản đắt nhất ở §2), thể hiện: nhãn nguồn (✓ từ trang khoá học / ⚠ không có trong tài liệu / ⏳ chưa xác nhận), chip trích dẫn mã mục, trạng thái "đã chuyển giảng viên", nút hoàn tác-chuyển-người ("Hỏi TA ngay").
-    - Số ① — kịch bản #5: nguyên tắc **G10 — thu hẹp phạm vi khi nghi ngờ**; mức tự chủ: "cấm" (tự xác nhận tài liệu) + "tự làm" (nhánh `chuyen_TA`).
-    - Số ② — kịch bản #4: nguyên tắc **G1 — làm rõ hệ thống làm được gì** + **PAIR Errors/Graceful Failure**; mức tự chủ: "tự làm" của `tra_cuu_tai_lieu`, kèm nút chuyển TA cho phần không có nguồn.
-  - **Màn hình 2 — giảng viên/TA (hàng chờ):** bảng hàng chờ hai dòng, phân biệt nhãn "nghi vấn lỗi tài liệu — escalate giảng viên" (chỉ giảng viên xác nhận được) với "câu hỏi thường — TA trả lời" — thể hiện đúng luật thêm ở §4 (TA không tự xác nhận thay lỗi tài liệu). Đây là màn hình bonus riêng của track T2.
-- Quyết định: chọn hiện độ chắc bằng **nhãn màu + chip trích dẫn** ngay trong bong bóng chat (thấy ngay, không cần bấm thêm) — đã nghĩ tới cách khác là chỉ ghi trong câu chữ AI nói (ví dụ "mình không chắc...") nhưng loại vì câu chữ dễ bị đọc lướt qua lúc tối muộn, còn nhãn màu thấy được ngay cả khi không đọc hết đoạn văn; cũng đã nghĩ tới việc dùng % độ tin cậy (dạng số) nhưng loại vì học viên không biết % đó tính từ đâu, dễ hiểu lầm là "AI chắc 70% nên tin được", trong khi nhãn nguồn (có/không có tài liệu) trung thực hơn về bản chất giới hạn của AI.
-- *Hạn chế còn lại (ghi trung thực):* chưa chụp ảnh PNG đánh số riêng để kèm vào `prototype/` như gợi ý cấu trúc repo — các số đánh số đang nằm ngay trong HTML (mở file là thấy luôn ① ②), nhóm nên tự chụp màn hình khi mở file bằng trình duyệt nếu cần ảnh tĩnh để nộp kèm.
+- Link hoặc file: `prototype/index.html` · Công cụ: HTML tĩnh (dựng theo mẫu `prototype-sample/index.html`) · Phần nào mock: toàn bộ hội thoại, dữ liệu khoá/buổi 3, hàng chờ TA, trạng thái FAQ — không backend, không đăng nhập · Có lời gọi AI thật không: không
+- 1–2 ảnh có đánh số; mỗi số: thể hiện gì · nguyên tắc HAX/PAIR nào · mức tự chủ nào:
+  - Ảnh 1, số ① — Ca #4 trên `prototype/index.html`: nhãn «✓ từ trang khoá học» trên phần hạn nộp Bài tập 3 — thể hiện phần AI có nguồn, trả lời chắc · **HAX G1** · `tra_cuu_tai_lieu` = **tự làm**. (Ảnh 2 / ca #5 cùng file: chip «không đủ thẩm quyền khẳng định đúng/sai» + escalate — **G10**, hành vi xác nhận tài liệu = **cấm**.)
+  - Ảnh 1, số ② — Ca #4: nhãn «⚠ không có trong tài liệu» + khung giới hạn phần hàm Excel / nút [Hỏi TA ngay] — thể hiện phần không có nguồn, không bịa, có đường lui · **HAX G1+G2, G10** và **PAIR Errors + Graceful Failure** · `chuyen_TA` = **tự làm**. (Ảnh 2 / ca #5: dòng «Dựa vào §3.3» + nút FAQ chờ duyệt — **PAIR Explainability** · `dang_FAQ` = **cần người duyệt**.)
+- Quyết định: cách hiện độ chắc/bằng chứng và điều khiển mức tự chủ — đã nghĩ tới cách nào khác, vì sao chọn cách này: Đã cân nhắc (a) một thanh % độ chắc chung cho cả câu trả lời, (b) chỉ đổi màu chữ cảnh báo, (c) tách câu trả lời thành hai khối nguồn/không-nguồn kèm nhãn + nút đường lui khác nhau theo loại lỗi. Chọn (c) vì kịch bản #4 có hai phần cost-of-error khác nhau trong cùng một tin nhắn — % chung sẽ che mất chỗ nào AI chắc/chỗ nào không; chỉ đổi màu chữ không đủ để gắn G1/G10 vào một chỗ bấm được. Mức tự chủ hiện bằng bảng tool bên phải + tô vàng tool đang đổi (giống mẫu), và trên chat bằng nút/trạng thái (Hỏi TA tự làm; FAQ chờ duyệt; escalate giảng viên). Ca #5 thêm toggle ba mức `dang_FAQ` để demo cái giá khi chọn sai mức (tự đăng = lan rộng).
 
 ## §6. Tốt là gì (chặng 6 — nhẹ, bỏ được nếu thiếu giờ)
 
 - 3 tiêu chí Pass/Fail chấm được:
-  1. Không có kịch bản nào bị AI xác nhận hoặc giải hộ đáp số cho bài tập đang mở.
-  2. Mọi câu trả lời về nội dung tài liệu đều trỏ được về một mục §x.x cụ thể, hoặc nói rõ "không có trong tài liệu" — không có câu nào bỏ trống nguồn.
-  3. Khi nghi ngờ tài liệu sai, AI không tự khẳng định đúng/sai mà luôn có đường chuyển giảng viên ngay trong lượt trả lời đó (không im lặng, không tự quyết).
-- Thiết kế của nhóm đạt tiêu chí nào trên 2 kịch bản đắt nhất:
-  - **#4:** tiêu chí 1 — Pass (không liên quan xác nhận đáp số). Tiêu chí 2 — **chưa chắc Pass**: thiết kế hiện tại chỉ chặn bằng "luật nói miệng" (yêu cầu AI tự nhận không có nguồn), chưa có cơ chế kỹ thuật thật kiểm tra groundedness trước khi trả lời — đây là lỗi còn lại, không phải đã giải quyết xong. Tiêu chí 3 — không áp dụng (không phải ca tài liệu sai).
-  - **#5:** tiêu chí 1 — không áp dụng. Tiêu chí 2 — Pass (trích đúng §3.3, không bỏ trống nguồn). Tiêu chí 3 — Pass về mặt thiết kế (có đường chuyển giảng viên), nhưng còn khe hở: tool `chuyen_TA` không tự phân biệt mức ưu tiên, phải dựa vào nhãn gắn thủ công "nghi vấn lỗi tài liệu" mà bài chưa định nghĩa ai/cái gì gắn nhãn đó.
-- Lỗi còn lại: (a) tiêu chí 2 ở #4 mới là luật thiết kế trên giấy, chưa có cơ chế kỹ thuật (groundedness check) thật; (b) cơ chế gắn nhãn "nghi vấn lỗi tài liệu" ở #5 chưa được định nghĩa rõ ai/khi nào gắn, cần một vòng thiết kế nữa nếu làm tiếp.
+  1. Pass nếu mọi câu trả lời về hạn nộp / nội dung buổi chỉ trỏ được về một dòng Dữ liệu B hoặc một mục §3.x; Fail nếu nêu tên hàm Excel, «slide N», hoặc nội dung buổi chưa học như thể có trong tài liệu.
+  2. Pass nếu với Bài tập đang mở AI không đưa/không xác nhận đáp số và không viết nhận xét hộ; Fail nếu có bất kỳ câu xác nhận số hoặc đoạn làm hộ.
+  3. Pass nếu khi nghi vấn lỗi tài liệu (§3.3) AI không khẳng định đúng/sai, có trạng thái «chờ giảng viên», và `dang_FAQ` không đăng công khai trước duyệt; Fail nếu tự xác nhận tài liệu hoặc tự đăng FAQ.
+- Thiết kế của nhóm đạt tiêu chí nào trên 2 kịch bản đắt nhất: Ca #4 đạt tiêu chí 1 (tách nguồn/không-nguồn, không bịa hàm). Ca #5 đạt tiêu chí 1 và 3 (không khẳng định đúng/sai, escalate + FAQ cần duyệt). Tiêu chí 2 không bị kích hoạt trên #4/#5 (không xin đáp số) nhưng đã khóa bằng luật tách `goi_y_bai_tap` theo trạng thái bài ở §4 — đạt trên kịch bản #1/#2 nếu demo thêm.
+- Lỗi còn lại: Track không có tool chuyển thẳng giảng viên — prototype giả lập escalate qua TA + cờ ưu tiên; nếu TA bỏ qua luật escalate vẫn có thể tự trả lời sai. Chưa gắn cờ «đang chờ xác nhận» vào chính mục §3.3 trên trang tài liệu ngoài chat (mới hiện trong prototype). Không có lời gọi AI thật nên ca lạ phải diễn tay theo bảng mức tự chủ.
 
 ## §7. Demo
 
